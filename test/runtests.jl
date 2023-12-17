@@ -1,6 +1,9 @@
 using SumOfExpVPMR
 using Test
+using SpecialFunctions
 
-@testset "SumOfExpVPMR.jl" begin
-    # Write your tests here.
+@testset "SumOfExpVPRM.jl" begin
+    include("VP.jl")
+    include("VPMR.jl")
+    include("fast_exp_transform.jl")
 end
