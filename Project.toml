@@ -1,0 +1,13 @@
+name = "SumOfExpVPMR"
+uuid = "2c69873a-e0bb-44e1-90b4-d15ac3b7e936"
+authors = ["Xuanzhao Gao <gaoxuanzhao@gmail.com> and contributors"]
+version = "1.0.0-DEV"
+
+[compat]
+julia = "1"
+
+[extras]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
+
+[targets]
+test = ["Test"]
