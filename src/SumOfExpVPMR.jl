@@ -4,7 +4,7 @@ using LinearAlgebra, SpecialFunctions, GaussQuadrature, SpecialFunctions, Matrix
 
 export GaussParameter, Gauss_int
 export VP_cal, MR_cal, VPMR_cal
-export soe, soe_error, max_error
+export soe, soe_error, max_error, SoePara
 export FET1d
 
 include("Gaussian_integral.jl")
