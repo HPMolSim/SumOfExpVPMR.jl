@@ -23,7 +23,7 @@ function sog(x::T, s::Vector{T1}, w::Vector{T2}) where{T, T1, T2}
 end
 
 function sog_error(f::Function, s::Vector{T2}, w::Vector{T2}, x::Vector{T1} ) where{T1<:Real, T2}
-    error = [abs(sog(x[i], s, w) - f(x[i])) for i in 1:size(x, 1)]
+    error = [abs(sog(xᵢ, s, w) - f(xᵢ)) for xᵢ in x]
     return error
 end
 
@@ -37,7 +37,7 @@ function sog_error(f::Function,
                    p::SOGPara{T},
                    x::Vector{T1}
                   ) where {T1<:Real, T<:AbstractFloat}
-    [abs(soe(x[i], p) - f(x[i])) for i in eachindex(x)]
+    [abs(soe(xᵢ, p) - f(xᵢ)) for xᵢ in x]
 end
 
 # maximum error over the same grid

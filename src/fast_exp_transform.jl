@@ -16,7 +16,7 @@ function FET1d(q_1::Vector{TQ}, q_2::Vector{TQ}, x::Vector{T}, soepara::SoePara{
         sum_result += q_1[i] * q_2[i]
     end
 
-    for (s, w) in soepara.sw
+    for (s, w) in zip(soepara.s, soepara.w)
         A = ComplexF64(q_2[sort_x[N]])
         sum_result += w * q_1[sort_x[N - 1]] * exp(s * (x[sort_x[N - 1]] - x[sort_x[N]]) / α) * A
         for i in N-2:-1:1
