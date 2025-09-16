@@ -5,25 +5,38 @@ using LinearAlgebra, SpecialFunctions, GaussQuadrature, SpecialFunctions, Matrix
 using DelimitedFiles, Polynomials
 
 export GaussParameter, Gauss_int
-export MR_cal, VPMR_cal, psog_cal
+export VP_cal, MR_cal, VPMR_cal, psog_cal
 export soe, soe_error, max_error, SoePara
 export sog, sog_error, sog_max_error, SOGPara
 export prony
+export FET1d
 
 include("Gaussian_integral.jl")
+include("VP.jl")
 include("MR.jl")
 include("soe.jl")
 include("sog.jl")
 include("prony.jl")
 include("gsoe_initialguess.jl")
 include("psog_initialguess.jl")
+include("fast_exp_transform.jl")
 
-function VPMR_cal(f::Function, N::Int, p::Int; region::Tuple{TR1, TR2} = (0.0, π), T1::DataType = ComplexF64, T2::DataType = Float64, digit::Int = 512, print_info::Bool=false) where{TR1, TR2}
+function VPMR_cal(f::Function,
+    nc::T,
+    n::Int,
+    N::Int,
+    p::Int;
+    region::Tuple{TR1, TR2} = (0.0, π),
+    T1::DataType = ComplexF64,
+    T2::DataType = Float64,
+    digit::Int = 512,
+    print_info::Bool=false,
+    weighted_balanced_truncation::Bool=true) where{T, TR1, TR2}
 
     @assert iszero(digit % 256)
 
     s, w = setprecision(digit) do
-       gsoe_initialguess2(N)
+        VP(f, nc, n, N, region)
     end
 
     if print_info
@@ -33,8 +46,8 @@ function VPMR_cal(f::Function, N::Int, p::Int; region::Tuple{TR1, TR2} = (0.0, �
     end
 
     smr, wmr, σ = setprecision(digit) do 
-        MR(s, w, p)
-	    end
+        MR_cal(s, w, p; weighted_balanced_truncation = weighted_balanced_truncation)
+	end
 
     perm = sortperm(wmr,by=abs)
     smr = smr[perm]

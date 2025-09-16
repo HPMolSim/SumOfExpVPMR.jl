@@ -10,7 +10,7 @@ struct SoePara{T}
 end
 
 # sum-of-exponentials evaluator
-function soe(x::T1, p::SoePara{T2}; T::DataType = Float64) where {T1<:Real, T2<:AbstractFloat}
+function soe(x::T1, p::SoePara{T2}; T::DataType = Float64) where {T1<:Real, T2}
     xabs = abs(x)
     total = zero(T2)
     @inbounds for i in eachindex(p.s)
@@ -24,7 +24,7 @@ function soe(x::T, s::Vector{T1}, w::Vector{T2}) where{T, T1, T2}
 end
 
 function soe_error(f::Function, s::Vector{T2}, w::Vector{T2}; x::Vector{T1} = big.([0.0:0.01:10.0...])) where{T1<:Real, T2}
-    error = [abs(soe(x[i], s, w) - f(x[i])) for i in 1:size(x, 1)]
+    error = [abs(soe(xᵢ, s, w) - f(xᵢ)) for xᵢ in x]
     return error
 end
 
@@ -35,16 +35,16 @@ end
 
 # error vector for sum‐of‐exponentials approximation
 function soe_error(f::Function,
-                   p::SoePara{T},
-                   ; x::Vector{T1} = big.(0.0:0.01:10.0)
-                  ) where {T1<:Real, T<:AbstractFloat}
-    [abs(soe(x[i], p) - f(x[i])) for i in eachindex(x)]
+                   p::SoePara{T};
+                   x::Vector{T1} = big.([0.0:0.01:10.0...])
+                  ) where {T1<:Real, T}
+    [abs(soe(xᵢ, p) - f(xᵢ)) for xᵢ in x]
 end
 
 # maximum error over the same grid
 function max_error(f::Function,
                    p::SoePara{T};
-                   x::Vector{T1} = big.(0.0:0.01:10.0)
-                  ) where {T1<:Real, T<:AbstractFloat}
-    maximum(soe_error(f, p; x = x))
+                   x::Vector{T1} = big.([0.0:0.01:10.0...])
+                  ) where {T1, T}
+    return maximum(soe_error(f, p; x = x))
 end
